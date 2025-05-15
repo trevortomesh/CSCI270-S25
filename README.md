@@ -1,4 +1,4 @@
-# 🧑‍🏫 Class Code Repository – CSCI 270 (Web/Mobile App Development)
+# Class Code Repository – CSCI 270 (Web/Mobile App Development)
 
 Welcome! This GitHub repository contains the **same code I use during our class sessions**. You can refer back to it at any time to review examples, follow along, or copy code you may have missed.
 
