@@ -12,19 +12,7 @@
 <h1 id="welcome-message"></h1>
 <h2>Click the button to change the background color</h2>
 <button onclick="changeBackgroundColor()">Change Background</button>
-<script>
-    let color = "lightblue";
-    const userName = 'John';
-    let greeting = "Welcome to the site, ";
-    greeting += userName;
-    document.getElementById("welcome-message").textContent = greeting + "!";
-
-    function changeBackgroundColor() {
-        color = (color === "lightblue") ? "lightcoral" : "lightblue";
-        document.body.style.backgroundColor = color;
-    }
-
-</script>
+<script src = "script.js"></script>
 
 </body>
 </html>
