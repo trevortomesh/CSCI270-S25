@@ -8,8 +8,7 @@ Welcome to the **Living Textbook** for CSCI 270 at Ave Maria University. This is
 
 ## 📁 Code Repository
 
-You can access all in-class code examples here:
-**🔗 [GitHub Code Repo](https://github.com/your-username/your-repo-name)**
+You can access all in-class code examples in the [src](src) directory
 
 Use this to:
 - Follow along with live coding
