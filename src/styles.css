@@ -1,0 +1,109 @@
+/* Headings */
+h1{
+    color: darkblue;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 5px;
+}
+
+h2{
+    color: teal;
+    margin-top: 20px;
+}
+
+h3{
+    color: #555;
+    font-style: italic;
+}
+
+h1, h2, h3{
+    font-family: 'Georgia', serif;
+    color: cyan;
+}
+
+
+p{
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+
+ul{
+    list-style-type: square;
+    padding-left: 20px;
+}
+
+ol{
+    background-color: #f9f9f9;
+    border-left: 5px solid orange;
+    padding: 10px 10px 10px 20px;
+}
+
+input[type="text"],
+input[type="email"]{
+    margin: 5px 0;
+    padding: 5px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+}
+
+input[type="checkbox"]{
+    margin-top: 10px;
+}
+
+a{
+    color: darkred;
+    text-decoration: none;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+
+img{
+    width: 200px;
+    border: 2px solid #ddd;
+    margin: 10px;
+    border-radius: 8px;
+}
+
+.important{
+    font-weight: bold;
+    color: red;
+}
+
+#my-heading{
+    text-transform: uppercase;
+    color: darkgreen;
+}
+
+.card p{
+    color: purple;
+}
+
+.container{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    height: 200px;
+}
+
+.box{
+    background-color: lightblue;
+    padding: 20px;
+    text-align: center;
+}
+
+.grid-container{
+    display: grid;
+    grid-template-columns: 100px repeat(2, 1fr) 50px;
+    gap: 10px;
+}
+
+.item{
+    background-color: peachpuff;
+    padding: 20px;
+    text-align: center;
+}
