@@ -1,0 +1,40 @@
+GET - "Give me data."
+-> http
+    GET /posts
+-> js
+    fetch('\posts')
+
+POST - "Send this data to the server."
+-> http
+    POST /posts
+-js
+    fetch('/posts',{
+        method: 'POST',
+        body: JSON.stringify({title: 'New Post'})
+    }
+
+PUT - "Update something that already exists"
+-> http
+    PUT /posts/3
+
+-> js
+    fetch('/posts/3',{
+        method: 'PUT',
+        body: JSON.stringify({title: 'Updated Post'})
+    });
+
+DELETE - "Remove this item"
+
+-> http
+    DELETE /posts/3
+
+-> js
+    fetch('/posts/3', {method: 'DELETE'});
+
+
+------------- ENDPOINTS ----------------
+
+GET /posts/3
+
+/posts -> the type of data
+/3 -> the specific item (post number 3)

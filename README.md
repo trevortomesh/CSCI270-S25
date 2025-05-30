@@ -59,7 +59,8 @@ Reach out via Canvas or email: **[trevor.tomesh@avemaria.edu](mailto:trevor.tome
 - [📘 Chapter 13: The DOM (Document Object Model)](#-chapter-13-the-dom-document-object-model)
 - [📘 Chapter 14: Event Listeners](#-chapter-14-event-listeners)
 - [📡 Chapter 15: AJAX and the Fetch API](#-chapter-15-ajax-and-the-fetch-api)
-
+- [📘 Chapter 16: HTTP Methods](#-chapter-16-http-methods)
+- [📘 Chapter 17: RESTful APIs](#-chapter-17-restful-apis)
 
 
 ---
@@ -2230,5 +2231,272 @@ Create a simple HTML page with a button. When clicked, it should:
 ------
 
 
+
+*This chapter was transcribed and refined from a live lecture by Dr. Trevor Tomesh and formatted with the help of ChatGPT.*
+
+---
+
+# 📘 Chapter 16: HTTP Methods
+
+> "If you know what method to use, you're already halfway to building a web app."
+
+---
+
+## 💡 What Are HTTP Methods?
+
+HTTP methods tell a server **what action** you want to perform on a resource. Think of them like **verbs**:
+
+* `GET` — Retrieve something
+* `POST` — Send data to create something
+* `PUT` — Update something entirely
+* `PATCH` — Update something partially
+* `DELETE` — Remove something
+
+These methods are part of the HTTP protocol, which governs how clients (like your browser) communicate with servers.
+
+---
+
+## 🧰 Real-Life Analogy: Pizza Orders
+
+* `GET`: "What pizzas do you have?"
+* `POST`: "I'd like to order a pepperoni pizza."
+* `PUT`: "Change my whole order to a veggie pizza."
+* `PATCH`: "Just remove the mushrooms from my pizza."
+* `DELETE`: "Cancel my order."
+
+---
+
+## 📃 Common Use Cases
+
+| Method   | Description                         | Use Case                           |
+| -------- | ----------------------------------- | ---------------------------------- |
+| `GET`    | Read/retrieve data                  | Load a list of blog posts          |
+| `POST`   | Create new data                     | Submit a form to create a new user |
+| `PUT`    | Update/replace existing data        | Overwrite user profile             |
+| `PATCH`  | Update part of an existing resource | Change a user's email address      |
+| `DELETE` | Remove a resource                   | Delete a to-do item                |
+
+---
+
+## 💪 Safe and Idempotent
+
+Some methods are **safe** (don't change anything) or **idempotent** (same result if run multiple times):
+
+| Method   | Safe | Idempotent |
+| -------- | ---- | ---------- |
+| `GET`    | Yes  | Yes        |
+| `POST`   | No   | No         |
+| `PUT`    | No   | Yes        |
+| `PATCH`  | No   | No         |
+| `DELETE` | No   | Yes        |
+
+---
+
+## 💡 Fetching Data with `GET`
+
+```javascript
+fetch("https://jsonplaceholder.typicode.com/posts")
+  .then(res => res.json())
+  .then(data => console.log(data));
+```
+
+This retrieves data using the `GET` method (default for `fetch`).
+
+---
+
+## ✉️ Sending Data with `POST`
+
+```javascript
+fetch("https://jsonplaceholder.typicode.com/posts", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    title: "My Post",
+    body: "This is an awesome post.",
+    userId: 1
+  })
+})
+  .then(res => res.json())
+  .then(data => console.log(data));
+```
+
+This sends JSON data to the server to create a new resource.
+
+---
+
+## 🔄 Updating with `PUT` and `PATCH`
+
+**PUT:** Replace entire resource
+
+```javascript
+fetch("https://jsonplaceholder.typicode.com/posts/1", {
+  method: "PUT",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    id: 1,
+    title: "New Title",
+    body: "New content",
+    userId: 1
+  })
+})
+```
+
+**PATCH:** Update part of a resource
+
+```javascript
+fetch("https://jsonplaceholder.typicode.com/posts/1", {
+  method: "PATCH",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    title: "Patched Title"
+  })
+})
+```
+
+---
+
+## 📍 Deleting a Resource
+
+```javascript
+fetch("https://jsonplaceholder.typicode.com/posts/1", {
+  method: "DELETE"
+})
+```
+
+This removes the post with ID 1 from the server.
+
+---
+
+## ✅ Summary
+
+* HTTP methods define the **action** taken on resources
+* `GET`, `POST`, `PUT`, `PATCH`, and `DELETE` are the most common
+* Use `fetch()` with method, headers, and body to make requests
+* Understand safe/idempotent behavior for better API usage
+
+> Next up: **RESTful Routing** — how URLs and methods work together to build clean, scalable APIs
+
+---
+
+*This chapter was transcribed from a live lecture by Dr. Trevor Tomesh and refined with the help of ChatGPT to ensure clarity and completeness.*
+
+---
+
+# 📘 Chapter 17: RESTful APIs
+
+> “REST is not a new idea. It’s a really well-structured old idea.”
+
+---
+
+## 🧰 What is a RESTful API?
+
+REST stands for **Representational State Transfer**. It's an architectural style for designing **networked applications**, especially web APIs.
+
+A **RESTful API** uses HTTP methods to perform CRUD operations (Create, Read, Update, Delete) on resources.
+
+Each resource is typically represented as a URL, and the actions are determined by the HTTP method:
+
+| HTTP Method | Purpose | Action                |
+| ----------- | ------- | --------------------- |
+| GET         | Read    | Retrieve data         |
+| POST        | Create  | Add new data          |
+| PUT         | Update  | Replace data          |
+| PATCH       | Update  | Partially update data |
+| DELETE      | Delete  | Remove data           |
+
+---
+
+## 🔗 Example: RESTful Routes for a Blog API
+
+Let’s say you have a blog API. Each post is a resource.
+
+| Action        | HTTP Method | Endpoint     |
+| ------------- | ----------- | ------------ |
+| List posts    | GET         | `/posts`     |
+| Get one post  | GET         | `/posts/:id` |
+| Create a post | POST        | `/posts`     |
+| Update a post | PUT         | `/posts/:id` |
+| Delete a post | DELETE      | `/posts/:id` |
+
+These endpoints follow REST conventions.
+
+---
+
+## 📂 JSON: The Standard Format
+
+RESTful APIs usually send data in **JSON** (JavaScript Object Notation):
+
+```json
+{
+  "id": 1,
+  "title": "My First Blog Post",
+  "body": "This is the content of my first post."
+}
+```
+
+JavaScript has native support for JSON with:
+
+* `JSON.stringify()` to convert JS to JSON
+* `JSON.parse()` to convert JSON to JS
+
+---
+
+## 📰 Making a GET Request
+
+```javascript
+fetch('https://jsonplaceholder.typicode.com/posts')
+  .then(response => response.json())
+  .then(posts => {
+    console.log(posts);
+  })
+  .catch(error => console.error('Fetch error:', error));
+```
+
+This gets a list of posts.
+
+---
+
+## 📧 POST Request to Create Data
+
+```javascript
+const newPost = {
+  title: "My Post",
+  body: "This is a RESTful POST request.",
+  userId: 1
+};
+
+fetch('https://jsonplaceholder.typicode.com/posts', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(newPost)
+})
+  .then(response => response.json())
+  .then(data => console.log('Created post:', data))
+  .catch(error => console.error('Error:', error));
+```
+
+The server will create the post and respond with JSON.
+
+---
+
+## ✅ Summary
+
+* REST is an architectural style for designing web APIs
+* It uses standard HTTP methods to manage resources
+* Each URL represents a resource
+* Responses are usually in JSON
+* JavaScript's `fetch()` makes it easy to call these APIs asynchronously
+
+> Understanding REST will help you build both clients and servers that talk clearly, efficiently, and logically.
+
+---
 
 *This chapter was transcribed and refined from a live lecture by Dr. Trevor Tomesh and formatted with the help of ChatGPT.*
