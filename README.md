@@ -2679,6 +2679,7 @@ We’ll create a modular click counter using a JavaScript class. It’ll track b
 
 🧠 JavaScript Class – ClickCounter
 
+```javascript
 class ClickCounter {
 constructor(buttonID, displayID) {
 this.count = 0;
@@ -2699,6 +2700,7 @@ updateDisplay() {
 this.display.textContent = this.count;
 }
 }
+```
 
 🔧 Key Concepts:
 •	this.count holds the internal state
@@ -2710,8 +2712,10 @@ this.display.textContent = this.count;
 
 🧪 Instantiating Counters
 
+```javascript
 const counter1 = new ClickCounter("clickButton", "clickCount");
 const counter2 = new ClickCounter("clickButton2", "clickCount2");
+```
 
 This creates two independent counters with their own buttons and displays.
 
