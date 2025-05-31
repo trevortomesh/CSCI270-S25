@@ -61,7 +61,8 @@ Reach out via Canvas or email: **[trevor.tomesh@avemaria.edu](mailto:trevor.tome
 - [📡 Chapter 15: AJAX and the Fetch API](#-chapter-15-ajax-and-the-fetch-api)
 - [📘 Chapter 16: HTTP Methods](#-chapter-16-http-methods)
 - [📘 Chapter 17: RESTful APIs](#-chapter-17-restful-apis)
-
+- [📘 Chapter 18: Object-Oriented Programming in JavaScript (Part 1)](#-chapter-18-object-oriented-programming-in-javascript-part-1)
+- [📘 Chapter 19: OOP in JavaScript, Part 2: Click Counter Example](#-chapter-19-oop-in-javascript-part-2-click-counter-example)
 
 ---
 
@@ -2500,3 +2501,253 @@ The server will create the post and respond with JSON.
 ---
 
 *This chapter was transcribed and refined from a live lecture by Dr. Trevor Tomesh and formatted with the help of ChatGPT.*
+---
+
+# 📘 Chapter 18: Object-Oriented Programming in JavaScript (Part 1)
+
+> "We're going from objects to blueprints. Think of this like building your own Pokémon species."
+
+---
+
+## 🤔 What is Object-Oriented Programming (OOP)?
+
+**OOP** is a programming paradigm built around the concept of **objects** that encapsulate data and behavior. In JavaScript, we can use this approach to structure complex applications more clearly.
+
+You already know how to use objects:
+
+```javascript
+const pikachu = {
+  name: "Pikachu",
+  level: 12,
+  type: "Electric",
+  attack: function() {
+    console.log("Zap!");
+  }
+};
+```
+
+But if we want to create *many* similar objects, we need a more scalable system. That's where **constructors** and **classes** come in.
+
+---
+
+## 🔧 Constructor Functions (Classic Way)
+
+```javascript
+function Pokemon(name, type, level) {
+  this.name = name;
+  this.type = type;
+  this.level = level;
+  this.attack = function() {
+    console.log(`${this.name} attacks with a ${this.type}-type move!`);
+  };
+}
+
+const bulbasaur = new Pokemon("Bulbasaur", "Grass", 5);
+bulbasaur.attack();
+```
+
+* `this` refers to the new object being created
+* The `new` keyword creates a new instance of `Pokemon`
+
+### 🔍 Pros and Cons
+
+* ✅ Easy to understand
+* ❌ Repeats methods for every object (memory inefficient)
+
+---
+
+## 💼 Prototypes to the Rescue
+
+We can improve the above method by attaching shared methods to the **prototype**:
+
+```javascript
+Pokemon.prototype.attack = function() {
+  console.log(`${this.name} attacks with a ${this.type}-type move!`);
+};
+```
+
+* Saves memory by storing the method once and sharing it across instances
+
+---
+
+## 🏗️ JavaScript Classes (Modern Way)
+
+Introduced in ES6, JavaScript `class` syntax makes OOP cleaner and more familiar to people coming from other languages like Python or Java.
+
+```javascript
+class Pokemon {
+  constructor(name, type, level) {
+    this.name = name;
+    this.type = type;
+    this.level = level;
+  }
+
+  attack() {
+    console.log(`${this.name} attacks with a ${this.type}-type move!`);
+  }
+}
+
+const charmander = new Pokemon("Charmander", "Fire", 8);
+charmander.attack();
+```
+
+### 🧳 Benefits
+
+* Cleaner and more readable
+* Uses prototype under the hood
+* Supports inheritance and encapsulation (coming up in Part 2)
+
+---
+
+## 💡 Real-World Use Case
+
+You could use a `Pokemon` class to build a whole battle simulator:
+
+* Create many Pokémon
+* Track levels and HP
+* Add methods like `levelUp`, `faint`, or `useMove`
+
+This OOP structure scales well for big projects.
+
+---
+
+## ✅ Summary
+
+* OOP lets you create reusable blueprints for objects
+* Constructor functions are the old-school way
+* Prototypes make shared methods efficient
+* Classes are the modern, clean syntax
+* `this` refers to the instance being created
+* `new` creates a new object instance
+
+> Next up: Inheritance and extending classes in JavaScript OOP (Part 2)
+
+---
+
+*This chapter was transcribed from a live lecture by Dr. Trevor Tomesh for CSCI 270 at Ave Maria University and formatted with the help of ChatGPT.*
+---
+
+# Chapter 19 – OOP in JavaScript, Part 2: Click Counter Example
+
+✝️ Opening Prayer
+
+“Heavenly Father, thank you for this day. Send down your Holy Spirit to guide our hearts, minds, and words. Prepare us to receive the truth. Open our ears to hear, our eyes to see, our mouths to speak, and our minds to understand the truth and beauty of your perfect design. Amen.”
+
+⸻
+
+🗂️ Learning Goals
+
+By the end of this lesson, you should be able to:
+•	Define and instantiate a class in JavaScript
+•	Attach event listeners to HTML elements from within a class
+•	Maintain internal state using object properties
+•	Build modular, interactive web components using OOP
+
+⸻
+
+💡 Quick Refresher: What Is OOP?
+
+Object-Oriented Programming (OOP) is a paradigm that organizes code around reusable, modular units called objects, which combine:
+•	Properties (data)
+•	Methods (functions)
+
+In JavaScript:
+•	Classes are blueprints for objects
+•	Each object created from a class is called an instance
+•	Functions inside a class are called methods
+
+⸻
+
+🧪 Building the Click Counter (Hands-On)
+
+We’ll create a modular click counter using a JavaScript class. It’ll track button presses and update a visible count in the DOM.
+
+🧱 Basic HTML Layout
+
+<h1>Click Counter Example</h1>
+
+<button id="clickButton">Click Me</button>
+<p>Total Clicks: <span id="clickCount">0</span></p>
+
+<button id="clickButton2">Another Button</button>
+<p>Other Clicks: <span id="clickCount2">0</span></p>
+
+<script src="clicker.js"></script>
+
+
+⸻
+
+🧠 JavaScript Class – ClickCounter
+
+class ClickCounter {
+constructor(buttonID, displayID) {
+this.count = 0;
+this.button = document.getElementById(buttonID);
+this.display = document.getElementById(displayID);
+
+    this.button.addEventListener("click", () => {
+      this.increment();
+      this.updateDisplay();
+    });
+}
+
+increment() {
+this.count++;
+}
+
+updateDisplay() {
+this.display.textContent = this.count;
+}
+}
+
+🔧 Key Concepts:
+•	this.count holds the internal state
+•	DOM elements are bound once during instantiation
+•	Arrow function ensures this refers to the class instance
+•	increment() and updateDisplay() are instance methods
+
+⸻
+
+🧪 Instantiating Counters
+
+const counter1 = new ClickCounter("clickButton", "clickCount");
+const counter2 = new ClickCounter("clickButton2", "clickCount2");
+
+This creates two independent counters with their own buttons and displays.
+
+⸻
+
+🎯 Benefits of Using OOP Here
+
+Without classes:
+•	You’d need unique logic and variables for each button
+
+With OOP:
+•	Reuse logic by creating new instances
+•	Easy to scale and extend (e.g., add reset, limit, color change)
+
+⸻
+
+📌 Activity (For Assignment 2)
+
+Extend your click counter by:
+•	Adding a reset button
+•	Implementing a reset() method in the class
+•	Updating the display to show “0” when reset
+
+👉 You’ll turn this in with Assignment #2.
+
+⸻
+
+🧾 Summary
+
+Concept	Description
+Class	Blueprint for creating similar objects
+Constructor	Initializes properties and binds elements
+Instance	A unique object created from a class
+Event Listener	Attaches behavior to UI interactions
+Encapsulation	Each instance manages its own state
+
+Object-Oriented Programming helps you write cleaner, more reusable, and easier-to-extend code—especially when working with interactive elements in the DOM.
+
+⸻
