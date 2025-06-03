@@ -2755,3 +2755,280 @@ Encapsulation	Each instance manages its own state
 Object-Oriented Programming helps you write cleaner, more reusable, and easier-to-extend code—especially when working with interactive elements in the DOM.
 
 ⸻
+
+# 📘 Chapter 20: Django (Part 1) - The Big Picture
+
+> "Django is like Rails but for Python. Batteries included."
+
+---
+
+## 🌟 What is Django?
+
+**Django** is a high-level Python web framework that encourages **rapid development** and **clean, pragmatic design**. It's built on the principle of **Don't Repeat Yourself (DRY)** and emphasizes **convention over configuration**.
+
+You can think of Django as the full stack:
+
+* Models (database)
+* Views (logic)
+* Templates (HTML rendering)
+
+It handles routing, authentication, admin dashboards, and more **out of the box**.
+
+---
+
+## 🔍 Why Use Django?
+
+* Fast to develop with
+* Highly secure
+* Scalable
+* Comes with a powerful admin interface
+* Great for beginners and pros
+
+---
+
+## 🔄 Django vs Flask
+
+| Feature       | Flask            | Django               |
+| ------------- | ---------------- | -------------------- |
+| Type          | Micro-framework  | Full-stack framework |
+| Configuration | Manual           | Convention-based     |
+| Admin panel   | DIY              | Built-in             |
+| Use case      | Lightweight apps | Feature-rich apps    |
+
+Django is the opinionated, batteries-included choice.
+
+---
+
+## 🚀 Starting a Django Project
+
+First, install Django:
+
+```bash
+pip install django
+```
+
+Then create a new project:
+
+```bash
+django-admin startproject mysite
+```
+
+Your directory now looks like:
+
+```
+mysite/
+├── manage.py
+└── mysite/
+    ├── __init__.py
+    ├── settings.py
+    ├── urls.py
+    ├── asgi.py
+    └── wsgi.py
+```
+
+Run the server:
+
+```bash
+python manage.py runserver
+```
+
+Visit `http://127.0.0.1:8000` to see your Django site.
+
+---
+
+## 🚫 Don't Touch the Inner `mysite/` Right Away
+
+The inner `mysite/` folder is like the central nervous system of your app. Leave it mostly alone until you need to:
+
+* Add middleware
+* Configure installed apps
+* Change database settings
+
+Most of your work will go into **apps** you create.
+
+---
+
+## 📁 Django Apps
+
+Django projects are made of **apps**. Each app is a Python package with a specific function:
+
+```bash
+python manage.py startapp blog
+```
+
+This creates:
+
+```
+blog/
+├── admin.py
+├── apps.py
+├── models.py
+├── tests.py
+├── views.py
+└── migrations/
+```
+
+You'll wire this app into your project using `INSTALLED_APPS` in `settings.py` and connect its views in `urls.py`.
+
+---
+
+## 🌐 The MTV Pattern (Not MVC)
+
+Django uses **MTV**:
+
+* **Model** → Data layer (like tables)
+* **Template** → Presentation layer (HTML)
+* **View** → Business logic layer
+
+You map URLs to views, which pull data from models and render templates.
+
+---
+
+## ✅ Summary
+
+* Django is a high-level Python web framework
+* Full stack: models, views, templates
+* Comes with admin, auth, ORM, routing, and more
+* Projects contain apps
+* Start projects with `startproject` and apps with `startapp`
+
+> In the next chapter, we'll dive into **views and URL routing**, and you'll build your first Django app.
+
+---
+
+*This chapter was transcribed from a live lecture by Dr. Trevor Tomesh and refined with the help of ChatGPT.*
+
+---
+
+# 📘 Chapter 21: Django (Part 2) — Building the Feedback App
+
+> “Every Django app begins with a single view and grows organically from there.”
+
+This chapter walks through the **creation of your first Django app**, step by step. We build a basic feedback application to demonstrate how URLs, views, and templates all connect.
+
+---
+
+## 🌐 Project Structure Overview
+
+By now, your project should include a new app called `feedback`:
+
+```
+mysite/
+├── feedback/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── tests.py
+│   ├── views.py
+│   └── templates/
+│       └── feedback/
+│           └── home.html
+├── manage.py
+└── mysite/
+    ├── __init__.py
+    ├── settings.py
+    ├── urls.py
+```
+
+---
+
+## 🚀 Step 1: Create a View
+
+Edit `feedback/views.py`:
+
+```python
+from django.shortcuts import render
+
+def home(request):
+    return render(request, "feedback/home.html")
+```
+
+---
+
+## 🔍 Step 2: Wire Up URLs
+
+Create a `urls.py` inside the `feedback/` app:
+
+```python
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path("", views.home, name="home")
+]
+```
+
+Then connect it to your main `urls.py` in the `mysite/` directory:
+
+```python
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("", include("feedback.urls"))
+]
+```
+
+---
+
+## 📄 Step 3: Add a Template
+
+Create the file `feedback/templates/feedback/home.html`:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Feedback</title>
+</head>
+<body>
+    <h1>Leave Your Feedback</h1>
+    <form>
+        <input type="text" placeholder="Your name"><br>
+        <textarea placeholder="Your feedback"></textarea><br>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
+```
+
+Make sure your app's template folder is configured in `settings.py` if necessary. But Django usually finds it automatically if the structure is correct.
+
+---
+
+## 🔓 Step 4: Register the App
+
+In `mysite/settings.py`, add `'feedback'` to `INSTALLED_APPS`:
+
+```python
+INSTALLED_APPS = [
+    ...
+    'feedback',
+]
+```
+
+Then run:
+
+```bash
+python manage.py runserver
+```
+
+Navigate to `http://127.0.0.1:8000` and you should see your new homepage.
+
+---
+
+## ✅ Summary
+
+* You created a `feedback` app
+* Built your first view, template, and URL route
+* Connected everything with Django’s MTV pattern
+* Ran your server and tested it live
+
+> In the next chapter, we'll add functionality: capturing form input, saving it to a database, and displaying submitted feedback.
+
+---
+
+*This chapter was transcribed from a live lecture by Dr. Trevor Tomesh and refined with the help of ChatGPT.*
+
