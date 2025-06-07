@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Library</title>
+    <style>
+        body { font-family: sans-serif; margin: 2rem;}
+        .book { padding: 1rem; border-bottom: 1px solid #ccc;}
+    </style>
+
+</head>
+<body>
+    <h1>📚Book Library</h1>
+
+    {% if books %}
+        {% for book in books %}
+            <div class="book">
+                <h2>{{ book.title }}</h2>
+                <p><strong>Author:</strong> {{ book.author }}</p>
+                <p><strong>Published:</strong> {{ book.published_year }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>There are no books in the library yet!</p>
+    {% endif %}
+</body>
+</html>

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import FeedbackForm
+from .models import Book
 
 
 # Create your views here.
@@ -17,3 +18,7 @@ def feedback_view(request):
     else:
         form = FeedbackForm()
     return render(request, 'blog/feedback.html', {'form': form})
+
+def book_list(request):
+    books = Book.objects.all() #Query all books from the database
+    return render(request, 'books/book_list.html', {'books': books})

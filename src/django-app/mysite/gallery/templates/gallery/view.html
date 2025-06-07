@@ -1,0 +1,14 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'gallery/styles.css' %}">
+<h1>Image Gallery</h1>
+<div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+    {% for photo in photos %}
+    <div style = "border: 2px solid; {% if photo.featured %}gold{% else %}#ccc{% endif %}; padding: 10px;">
+        <img src="{{ photo.image.url }}" width="200" style="display: block;">
+        <p>{{ photo.caption }}</p>
+        {% if photo.featured %}
+            <strong>🌟Featured!</strong>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
