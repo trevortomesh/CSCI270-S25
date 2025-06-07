@@ -302,7 +302,6 @@ You’ve learned:
 - How to preview HTML pages in WebStorm
 - Best practices for readability and accessibility
 
-> Next up: **CSS** – bring your site to life with color, layout, and style!
 
 ---
 
@@ -1819,7 +1818,6 @@ document.getElementById("greeting").textContent = `Hello, ${name}!`;
 - Common methods: `getElementById`, `querySelector`, `createElement`, `appendChild`
 - DOM manipulation powers most interactive features on modern websites
 
-> Next up: **Event Listeners** – how to respond to user actions like clicks, hovers, and key presses
 
 ---
 
@@ -2381,7 +2379,6 @@ This removes the post with ID 1 from the server.
 * Use `fetch()` with method, headers, and body to make requests
 * Understand safe/idempotent behavior for better API usage
 
-> Next up: **RESTful Routing** — how URLs and methods work together to build clean, scalable APIs
 
 ---
 
@@ -2620,7 +2617,6 @@ This OOP structure scales well for big projects.
 * `this` refers to the instance being created
 * `new` creates a new object instance
 
-> Next up: Inheritance and extending classes in JavaScript OOP (Part 2)
 
 ---
 
@@ -2892,7 +2888,7 @@ You map URLs to views, which pull data from models and render templates.
 * Projects contain apps
 * Start projects with `startproject` and apps with `startapp`
 
-> In the next chapter, we'll dive into **views and URL routing**, and you'll build your first Django app.
+
 
 ---
 
@@ -3026,9 +3022,383 @@ Navigate to `http://127.0.0.1:8000` and you should see your new homepage.
 * Connected everything with Django’s MTV pattern
 * Ran your server and tested it live
 
-> In the next chapter, we'll add functionality: capturing form input, saving it to a database, and displaying submitted feedback.
 
 ---
 
 *This chapter was transcribed from a live lecture by Dr. Trevor Tomesh and refined with the help of ChatGPT.*
 
+---
+
+# 📘 Chapter 22: Django (Part 3) — Building a Simple Photo Gallery
+
+> “In Django, you can build something beautiful and useful before lunch.”
+
+This chapter guides you through the beginning of a simple **photo gallery app** using Django. You’ll learn how to structure the app, create views and templates, and prepare for adding dynamic image handling later.
+
+---
+
+## 🚀 Step 1: Start a New App
+
+From your project directory:
+
+```bash
+python manage.py startapp gallery
+```
+
+Update `settings.py` to register the app:
+
+```python
+INSTALLED_APPS = [
+    ...
+    'gallery',
+]
+```
+
+---
+
+## 📁 Step 2: Set Up Folder Structure
+
+Create a template directory inside the `gallery/` app:
+
+```
+gallery/
+└── templates/
+    └── gallery/
+        └── home.html
+```
+
+---
+
+## 🔧 Step 3: Write the View
+
+In `gallery/views.py`:
+
+```python
+from django.shortcuts import render
+
+def home(request):
+    return render(request, "gallery/home.html")
+```
+
+---
+
+## 🔍 Step 4: URL Configuration
+
+Create a new `gallery/urls.py` file:
+
+```python
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path("", views.home, name="gallery-home")
+]
+```
+
+Then include it in your project’s main `urls.py`:
+
+```python
+from django.urls import path, include
+
+urlpatterns = [
+    ...
+    path("gallery/", include("gallery.urls"))
+]
+```
+
+---
+
+## 📄 Step 5: Create the Template
+
+In `gallery/templates/gallery/home.html`:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Photo Gallery</title>
+</head>
+<body>
+    <h1>Welcome to the Gallery</h1>
+    <div>
+        <img src="https://placekitten.com/200/200" alt="Placeholder kitten">
+        <img src="https://placekitten.com/201/200" alt="Another kitten">
+    </div>
+</body>
+</html>
+```
+
+You should now be able to visit `http://127.0.0.1:8000/gallery/` and see your placeholder images.
+
+---
+
+## ✅ Summary
+
+* Created a new Django app called `gallery`
+* Registered it and configured routing
+* Created a basic template with placeholder content
+* Set the stage for dynamic image handling and uploads in the next step
+
+
+---
+
+*This chapter was transcribed from a live lecture by Dr. Trevor Tomesh and refined with the help of ChatGPT.*
+---
+# 📘 Chapter 23: Django (Part 4) — Handling Image Uploads
+
+> "At some point, your gallery needs to actually hold images. That means dealing with uploads."
+
+This chapter walks through how to **accept image uploads** in Django, store them, and display them dynamically on the front end.
+
+---
+
+## 📁 Step 1: Add a Model
+
+In `gallery/models.py`:
+
+```python
+from django.db import models
+
+class Photo(models.Model):
+    image = models.ImageField(upload_to='images/')
+    description = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.description
+```
+
+Run the following commands:
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+---
+
+## 📄 Step 2: Enable Media in Settings
+
+In `settings.py`:
+
+```python
+import os
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+```
+
+And in `urls.py`:
+
+```python
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+```
+
+---
+
+## 📒 Step 3: Register the Model in Admin
+
+In `gallery/admin.py`:
+
+```python
+from django.contrib import admin
+from .models import Photo
+
+admin.site.register(Photo)
+```
+
+---
+
+## 🚀 Step 4: Create a Photo Upload Form
+
+In `gallery/forms.py`:
+
+```python
+from django import forms
+from .models import Photo
+
+class PhotoForm(forms.ModelForm):
+    class Meta:
+        model = Photo
+        fields = ['image', 'description']
+```
+
+---
+
+## 🔧 Step 5: Update Views
+
+In `gallery/views.py`:
+
+```python
+from .forms import PhotoForm
+from .models import Photo
+
+def home(request):
+    if request.method == 'POST':
+        form = PhotoForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+    else:
+        form = PhotoForm()
+
+    photos = Photo.objects.all()
+    return render(request, 'gallery/home.html', {'form': form, 'photos': photos})
+```
+
+---
+
+## 📷 Step 6: Update the Template
+
+In `gallery/templates/gallery/home.html`:
+
+```html
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload</button>
+</form>
+
+<hr>
+
+<h2>Gallery</h2>
+{% for photo in photos %}
+    <div>
+        <img src="{{ photo.image.url }}" alt="{{ photo.description }}" height="200">
+        <p>{{ photo.description }}</p>
+    </div>
+{% endfor %}
+```
+
+---
+
+## ✅ Summary
+
+* Created a model for uploaded photos
+* Registered the model in the admin
+* Enabled media settings
+* Wrote a form and view logic to handle image uploads
+* Displayed the uploaded images in the gallery
+
+
+---
+
+*This chapter was transcribed from a live lecture by Dr. Trevor Tomesh and refined with the help of ChatGPT.*
+
+---
+
+# 📘 Chapter 24: SQL and Django
+
+> "Every Django app eventually hits the database. Understanding how SQL works behind the scenes makes you a better Django developer."
+
+In this chapter, we explore how **Django uses SQL under the hood**. You’ll learn how to inspect queries, understand migrations, and build models with better insight into what's happening in the database.
+
+---
+
+## 🔄 Django's ORM in Action
+
+Django provides an **Object-Relational Mapper (ORM)**. You interact with Python classes, but Django translates these into SQL queries.
+
+```python
+from gallery.models import Photo
+
+Photo.objects.all()
+Photo.objects.filter(description__icontains="kitten")
+Photo.objects.get(id=1)
+```
+
+These generate SQL like:
+
+```sql
+SELECT * FROM gallery_photo;
+SELECT * FROM gallery_photo WHERE description ILIKE '%kitten%';
+SELECT * FROM gallery_photo WHERE id = 1;
+```
+
+You can view the SQL directly by turning on the query log or using:
+
+```python
+str(Photo.objects.filter(...).query)
+```
+
+---
+
+## 📊 Understanding Migrations
+
+When you change a model in Django, you must generate and apply a migration. This syncs your Python code with the actual database schema.
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+Migrations create SQL `CREATE TABLE`, `ALTER TABLE`, and `DROP COLUMN` statements under the hood.
+
+You can inspect them in `migrations/`.
+
+---
+
+## 🎡 Common SQL Concepts via Django
+
+| SQL Term    | Django Equivalent           |
+| ----------- | --------------------------- |
+| Table       | Model                       |
+| Row         | Instance                    |
+| Column      | Field                       |
+| Primary Key | `id` (auto by default)      |
+| Foreign Key | `models.ForeignKey(...)`    |
+| Join        | QuerySet relation traversal |
+
+---
+
+## 👀 Inspecting the Database
+
+To look at what's in your SQLite database:
+
+```bash
+python manage.py dbshell
+```
+
+Or use a GUI like **DB Browser for SQLite**.
+
+Alternatively, for PostgreSQL:
+
+```bash
+psql <dbname>
+```
+
+---
+
+## 🌍 Real-World Example: Feedback Table
+
+Let's say you created this model:
+
+```python
+class Feedback(models.Model):
+    name = models.CharField(max_length=100)
+    comment = models.TextField()
+```
+
+Django will create a table called `app_feedback`, with SQL like:
+
+```sql
+CREATE TABLE app_feedback (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(100),
+    comment TEXT
+);
+```
+
+---
+
+## ✅ Summary
+
+* Django ORM abstracts away SQL, but SQL is still running underneath
+* You can log or inspect raw SQL queries
+* Migrations convert model changes into SQL schema changes
+* Knowing SQL helps you debug and optimize your Django apps
+
+---
+
+*This chapter was transcribed from a live lecture by Dr. Trevor Tomesh and refined with the help of ChatGPT.*
