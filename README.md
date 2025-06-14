@@ -3402,3 +3402,590 @@ CREATE TABLE app_feedback (
 ---
 
 *This chapter was transcribed from a live lecture by Dr. Trevor Tomesh and refined with the help of ChatGPT.*
+
+---
+
+# 📘 Chapter 25: Getting Started with React.js
+
+> "React breaks down complex interfaces into small, manageable pieces. Think in components."
+
+In this chapter, we begin our journey with **React.js**, one of the most widely used libraries for building interactive user interfaces in the modern web.
+
+We’ll install all the necessary tooling, set up a brand-new project using **Vite**, and write our very first React component.
+
+------
+
+## 📁 What You'll Need
+
+- Node.js + npm (JavaScript runtime + package manager)
+- Vite (fast React app starter)
+- WebStorm (recommended IDE)
+
+> This chapter assumes you already have WebStorm installed. If not, install it first.
+
+------
+
+## ⚙️ Step 1: Install Node.js and npm
+
+React requires Node.js and npm.
+
+- **Website:** [https://nodejs.org](https://nodejs.org/)
+
+### 📍 Mac
+
+```bash
+brew install node  # if you use Homebrew
+```
+
+Or use the `.pkg` installer from the Node.js site.
+
+### 📍 Windows
+
+- Download the `.msi` installer from the site.
+- Check "Add to PATH" during installation.
+- Restart your terminal afterward.
+
+### 📍 Linux (Ubuntu/Debian)
+
+```bash
+sudo apt update
+sudo apt install nodejs npm
+```
+
+Or (recommended):
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+nvm install --lts
+```
+
+### ✅ Verify installation
+
+```bash
+node -v
+npm -v
+```
+
+You should see version numbers.
+
+------
+
+## 🚀 Step 2: Create a React App Using Vite
+
+Open **WebStorm** and:
+
+- Choose **New Project**
+- If Vite is available, select **React + JavaScript**
+- Otherwise, create an empty folder and open a terminal
+
+Then run:
+
+```bash
+npm create vite@latest my-react-app --template react
+```
+
+Follow the prompts:
+
+- Project name: `my-react-app`
+- Framework: React
+- Variant: JavaScript
+
+Then install dependencies:
+
+```bash
+cd my-react-app
+npm install
+```
+
+------
+
+## ▶️ Step 3: Run Your App
+
+```bash
+npm run dev
+```
+
+You’ll see something like:
+
+```bash
+Local: http://localhost:5173/
+```
+
+Open that link in your browser.
+
+------
+
+## 📒 Step 4: Create Your First Component
+
+Inside `src/`, create a new file: `WelcomeMessage.jsx`
+
+```jsx
+function WelcomeMessage() {
+  const name = "Trevor";
+  const isStudent = true;
+
+  return (
+    <div>
+      <h1>Hello, {name}!</h1>
+      <p>{isStudent ? "Welcome back to class." : "Please register to begin."}</p>
+    </div>
+  );
+}
+
+export default WelcomeMessage;
+```
+
+Then edit `App.jsx`:
+
+```jsx
+import WelcomeMessage from './WelcomeMessage';
+
+function App() {
+  return (
+    <div>
+      <WelcomeMessage />
+    </div>
+  );
+}
+
+export default App;
+```
+
+Save and view your component live in the browser.
+
+------
+
+## 🧪 WebStorm Tips
+
+- Run scripts: open `package.json`, click ▶ next to `dev`
+- Format code: `Cmd + Alt + L` (Mac) / `Ctrl + Alt + L` (Win/Linux)
+- Auto-imports: Start typing and use autocomplete
+
+------
+
+## 🚩 Troubleshooting
+
+- `npm: command not found` → Node.js not installed
+- Browser not updating → Restart `npm run dev`
+- WebStorm can't find modules → Run `npm install`
+
+------
+
+## ✅ Summary
+
+- Installed Node.js, npm, and Vite
+- Created a new React app
+- Ran it in the browser
+- Built your first component
+- Viewed live updates in WebStorm
+
+> You're now ready to dive into the React lecture series and build interactive, component-based applications.
+
+------
+
+*This chapter was developed by Dr. Trevor Tomesh with refinement assistance from ChatGPT to ensure clarity and instructional consistency.*
+
+---
+
+# 📘 Chapter 26: React State
+
+> "State is the soul of a component. It’s what makes your app dynamic, interactive, and alive."
+
+This chapter introduces the concept of **state in React**, with hands-on examples using the `useState` hook. You’ll learn how state variables can drive updates and how to use them to create interactive components.
+
+------
+
+## ❓ What is State?
+
+In React, **state** represents data that can change over time within a component. Whenever state changes, React automatically re-renders the component with the updated data.
+
+Unlike props (which are passed in), **state is local** to a component and managed internally.
+
+------
+
+## 🎲 useState Hook
+
+React provides the `useState` hook to define state inside functional components.
+
+```jsx
+import { useState } from 'react';
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <h1>{count}</h1>
+      <button onClick={() => setCount(count + 1)}>Add 1</button>
+    </div>
+  );
+}
+```
+
+### Breakdown:
+
+- `useState(0)` initializes `count` with a default of 0
+- `count` is the current value
+- `setCount` is a function that updates it
+- When `setCount()` is called, the component rerenders
+
+------
+
+## 🔧 Multiple State Variables
+
+You can use as many `useState` calls as needed:
+
+```jsx
+function Form() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+
+  return (
+    <form>
+      <input value={name} onChange={(e) => setName(e.target.value)} />
+      <input value={email} onChange={(e) => setEmail(e.target.value)} />
+    </form>
+  );
+}
+```
+
+This pattern is common in forms and user input handling.
+
+------
+
+## 🤔 Things to Know
+
+- State updates are **asynchronous**. Don’t expect `setState` to update the value immediately.
+- Don’t mutate state directly. Always use the setter:
+
+```jsx
+// Wrong:
+count++;
+
+// Right:
+setCount(count + 1);
+```
+
+- React batches multiple state updates to improve performance.
+
+------
+
+## ✅ Summary
+
+- `useState` lets you manage local component state
+- Calling the setter function triggers re-renders
+- You can use multiple pieces of state in one component
+- Avoid direct mutation
+
+> In the next chapter, we’ll see how to lift state up and share it between components.
+
+------
+
+*This chapter was transcribed from a live lecture by Dr. Trevor Tomesh and refined with the help of ChatGPT.*
+
+---
+
+# 📘 Chapter 27: Props and Component Reuse
+
+> "Props let you write a function once and use it everywhere with different data."
+
+In this chapter, we explore how to pass data into React components using **props**. This concept allows you to create reusable UI components and makes your application more maintainable and modular.
+
+------
+
+## 📝 What Are Props?
+
+**Props** (short for *properties*) are read-only values passed to components. They make components dynamic and configurable.
+
+You pass props when calling a component:
+
+```jsx
+<WelcomeMessage name="Trevor" isStudent={true} />
+```
+
+Inside the component, props are received like this:
+
+```jsx
+function WelcomeMessage(props) {
+  return <h1>Hello, {props.name}!</h1>;
+}
+```
+
+Or using **destructuring**:
+
+```jsx
+function WelcomeMessage({ name }) {
+  return <h1>Hello, {name}!</h1>;
+}
+```
+
+------
+
+## 🚪 Why Use Props?
+
+Props let you:
+
+- Reuse components with different data
+- Keep components modular and clean
+- Separate logic from presentation
+
+Example:
+
+```jsx
+function ProductCard({ title, price }) {
+  return (
+    <div>
+      <h2>{title}</h2>
+      <p>${price}</p>
+    </div>
+  );
+}
+
+<ProductCard title="Banana" price={1.29} />
+<ProductCard title="Apple" price={0.99} />
+```
+
+------
+
+## 🧬 Passing Functions as Props
+
+You can also pass functions as props:
+
+```jsx
+function Button({ label, onClick }) {
+  return <button onClick={onClick}>{label}</button>;
+}
+
+<Button label="Click Me" onClick={() => alert('Hi!')} />
+```
+
+This is essential for handling events and callbacks.
+
+------
+
+## ❓ Props vs State
+
+| Feature         | Props        | State                  |
+| --------------- | ------------ | ---------------------- |
+| Who sets it?    | Parent       | Component itself       |
+| Can be changed? | No           | Yes (with setState)    |
+| Use case        | Pass data in | Track internal changes |
+
+------
+
+## ✅ Summary
+
+- Props pass data *into* components
+- Use destructuring for cleaner code
+- Props can include any value: strings, numbers, objects, or functions
+- State and props serve different but complementary roles
+
+> Next up: lifting state up to a parent component so children can communicate.
+
+------
+
+*This chapter was transcribed from a live lecture by Dr. Trevor Tomesh and refined with the help of ChatGPT.*
+
+---
+
+# 📘 Chapter 28: ReactDOM and Client-Side Routing with React Router
+
+> "React Router is how you give your React app the illusion of multiple pages."
+
+In this chapter, we explore how **ReactDOM** mounts your app to the browser, and how **React Router** enables single-page applications with fast, client-side navigation.
+
+------
+
+## 🔍 What is ReactDOM?
+
+`ReactDOM` is responsible for rendering your React components into the actual browser DOM.
+
+Example:
+
+```jsx
+// main.jsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+```
+
+This boots your React app and attaches it to the `#root` element in your HTML.
+
+------
+
+## 📅 Setting Up a React Project
+
+### Option 1: Vite (Recommended)
+
+```bash
+npm create vite@latest my-app --template react
+cd my-app
+npm install
+npm run dev
+```
+
+### Option 2: Create React App
+
+```bash
+npx create-react-app my-app
+cd my-app
+npm start
+```
+
+------
+
+## 🔄 What is Client-Side Routing?
+
+Traditional websites reload the entire page when navigating.
+
+React apps use **client-side routing** to dynamically switch components without full-page reloads. This creates a smooth, seamless user experience.
+
+------
+
+## 📆 Installing React Router
+
+Install it in your project:
+
+```bash
+npm install react-router-dom
+```
+
+------
+
+## 📚 File Structure
+
+```text
+src/
+  ├─ App.jsx
+  ├─ main.jsx
+  └─ pages/
+       ├─ Home.jsx
+       ├─ About.jsx
+       └─ Contact.jsx
+```
+
+------
+
+## 📌 Basic Routing with React Router
+
+### App.jsx:
+
+```jsx
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import Home from './pages/Home';
+import About from './pages/About';
+import Contact from './pages/Contact';
+
+function App() {
+  return (
+    <BrowserRouter>
+      <nav>
+        <Link to="/">🏠 Home</Link> |
+        <Link to="/about">ℹ️ About</Link> |
+        <Link to="/contact">📬 Contact</Link>
+      </nav>
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="*" element={<h2>404 - Not Found</h2>} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
+```
+
+### Home.jsx
+
+```jsx
+function Home() {
+  return <h1>Welcome to the Home Page!</h1>;
+}
+export default Home;
+```
+
+### About.jsx
+
+```jsx
+function About() {
+  return <h1>About Our Application</h1>;
+}
+export default About;
+```
+
+### Contact.jsx
+
+```jsx
+function Contact() {
+  return <h1>Contact Us at contact@example.com</h1>;
+}
+export default Contact;
+```
+
+------
+
+## 🛠️ Nested Routes
+
+You can also create **nested routes** using `Outlet`.
+
+### App.jsx (Additions)
+
+```jsx
+import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
+
+<Routes>
+  <Route path="/dashboard" element={<Dashboard />}>
+    <Route path="profile" element={<Profile />} />
+  </Route>
+</Routes>
+```
+
+### Dashboard.jsx
+
+```jsx
+import { Outlet, Link } from 'react-router-dom';
+
+function Dashboard() {
+  return (
+    <>
+      <h2>Dashboard</h2>
+      <nav><Link to="profile">Go to Profile</Link></nav>
+      <Outlet />
+    </>
+  );
+}
+export default Dashboard;
+```
+
+### Profile.jsx
+
+```jsx
+function Profile() {
+  return <h3>This is your profile page.</h3>;
+}
+export default Profile;
+```
+
+------
+
+## 📝 Summary
+
+- `ReactDOM` renders the app into the DOM
+- `BrowserRouter` enables client-side navigation
+- `Routes` and `Route` define pages
+- `Link` allows in-app navigation
+- `Outlet` supports nested layouts
+- `path="*"` catches invalid routes for 404 pages
+
+> In the next chapter, we'll explore how to pass route parameters and navigate programmatically.
+
+------
+
+*This chapter was developed by Dr. Trevor Tomesh with refinement assistance from ChatGPT to ensure clarity and instructional consistency.*
