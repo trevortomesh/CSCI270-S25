@@ -3989,3 +3989,97 @@ export default Profile;
 ------
 
 *This chapter was developed by Dr. Trevor Tomesh with refinement assistance from ChatGPT to ensure clarity and instructional consistency.*
+
+---
+
+# 📘 Chapter 29: Understanding Single-Page Applications (SPAs)
+
+> "A single-page application feels like magic—but it's built on careful routing and smart component swapping."
+
+In this chapter, we dive into the concept of **Single-Page Applications (SPAs)** and explore why SPAs matter, how they work under the hood, and how they differ from traditional multi-page apps. We also examine how SPAs behave with routing, rendering, and component lifecycle.
+
+------
+
+## 📚 What Is a SPA?
+
+A **Single-Page Application** is a web application that loads a single HTML page and dynamically updates content without refreshing the page. React, Vue, and Angular are common SPA frameworks.
+
+In an SPA:
+
+- Routing is handled client-side.
+- Pages are not reloaded on navigation.
+- Components are swapped in and out.
+
+Instead of getting a new HTML document from the server on each navigation, the client fetches and updates only the necessary data or component.
+
+------
+
+## 📊 Benefits of SPAs
+
+- ✨ **Smooth User Experience:** No full-page reloads.
+- ⚡ **Faster Navigation:** Only fetch what you need.
+- ⚙️ **Reusable Components:** Modular codebase via React components.
+- 🛍️ **Offline Support:** Easier to cache static assets.
+
+------
+
+## 📝 How Routing Works in SPAs
+
+Traditional websites rely on the server for routing. In SPAs, routing is handled in the browser.
+
+With **React Router**, your app listens for URL changes and displays the correct components:
+
+```jsx
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import About from './pages/About';
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+```
+
+> The browser history API lets React intercept navigation events and avoid full page reloads.
+
+------
+
+## 🤖 Lifecycle in SPAs
+
+Because the page doesn't reload, **React components mount and unmount** dynamically as users navigate.
+
+- On first load, your root component renders.
+- When the route changes, React unmounts the current page and mounts the new one.
+- Components can use `useEffect` to run logic when mounted or unmounted.
+
+------
+
+## 🚫 SPA Gotchas
+
+While SPAs are powerful, they come with tradeoffs:
+
+- 🌐 **SEO Challenges:** SPAs don’t work well with web crawlers unless you add server-side rendering (SSR).
+- ❌ **Initial Load Time:** SPAs load all JavaScript upfront.
+- 🧰 **State Management:** Can become complex in large apps.
+- 🕵️‍♂️ **Analytics:** Traditional pageview tracking breaks.
+
+------
+
+## ✅ Summary
+
+- SPAs load a single HTML page and swap components dynamically.
+- Client-side routing handles navigation without reloading.
+- React Router is used to implement SPA behavior in React apps.
+- Watch out for SEO, load time, and analytics tradeoffs.
+
+> In the next chapter, we'll look at data persistence and how SPAs save and reload user state.
+
+------
+
+*This chapter was transcribed from a live lecture by Dr. Trevor Tomesh and refined with the help of ChatGPT.*
