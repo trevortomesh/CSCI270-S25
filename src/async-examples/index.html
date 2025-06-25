@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <meta charset = "UTF-8">
+    <title>Async UI Demo</title>
+</head>
+
+<body>
+    <button id="loadButton">Load Data</button>
+    <div id="output"></div>
+
+    <script>
+        document.getElementById('loadButton').addEventListener('click', () => {
+            const output = document.getElementById('output');
+
+            console.log("Clicked!");
+
+            // Synchronous: update UI immediately!
+            output.innerHTML = "Loading...";
+
+
+
+            // Macrotask: simulate slower server reponse
+            setTimeout(() => {
+                console.log("Timeout Finished!");
+                output.innerHTML += "<br>📦 Timeout data loaded!";
+            },0);
+
+            //Microtask: simulate promise response
+            Promise.resolve().then(() => {
+                console.log("Promise resolved!");
+                output.innerHTML += "<br> ✔️ Promise data loaded!";
+            });
+
+            console.log("End of click handler");
+        });
+    </script>
+</body>
+</html>

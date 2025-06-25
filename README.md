@@ -4083,3 +4083,1139 @@ While SPAs are powerful, they come with tradeoffs:
 ------
 
 *This chapter was transcribed from a live lecture by Dr. Trevor Tomesh and refined with the help of ChatGPT.*
+
+---
+
+
+
+# **Chapter: Asynchronous UI and the Event Loop**
+
+
+
+
+
+
+
+## **Introduction**
+
+
+
+
+
+Modern web applications must remain responsive while performing tasks like data fetching, animation, or handling user input. This is achieved through *asynchronous programming*. In this chapter, we explore how asynchronous user interfaces (UI) work, how JavaScript uses the *event loop* to manage concurrency, and how you can design applications that feel fast and responsive even when operations take time.
+
+
+
+------
+
+
+
+
+
+## **Learning Objectives**
+
+
+
+
+
+By the end of this chapter, you should be able to:
+
+
+
+- Understand the core principles of asynchronous user interaction
+- Explain the event loop and its role in UI responsiveness
+- Implement dynamic interactions using async data
+- Handle loading states, error states, and data updates
+- Design for perceived performance and smooth user experience
+
+
+
+
+
+------
+
+
+
+
+
+## **1. What Is Asynchronous UI?**
+
+
+
+
+
+Most modern UIs are asynchronous by design. Unlike synchronous execution, where the browser waits for one task to finish before starting the next, asynchronous UIs remain responsive while background tasks run.
+
+
+
+
+
+### **Real-world Example**
+
+
+
+
+
+When you open a messaging app, old messages load in the background while you continue to scroll, type, or switch chats. That responsiveness is made possible through async programming.
+
+
+
+
+
+### **Key Characteristics**
+
+
+
+
+
+- **Non-blocking behavior**: UI elements remain interactive while waiting.
+- **Feedback mechanisms**: Spinners and placeholders provide user feedback.
+- **Dynamic state updates**: UI reflects changes as they happen.
+
+
+
+
+
+------
+
+
+
+
+
+## **2. The JavaScript Event Loop**
+
+
+
+
+
+JavaScript uses a *single-threaded* concurrency model based on the **event loop**. While it can only do one thing at a time, it uses *queues* to manage when and how things are done.
+
+
+
+
+
+### **Event Loop Core Components**
+
+
+
+
+
+- **Call Stack**: Executes synchronous code line-by-line.
+- **Web APIs**: Browser-managed async tasks (e.g., setTimeout, fetch).
+- **Microtask Queue**: High-priority tasks like Promise.then().
+- **Macrotask Queue**: Lower-priority tasks like setTimeout, UI events.
+
+
+
+
+
+
+
+### **Analogy**
+
+
+
+
+
+Think of the event loop as a chef handling orders:
+
+
+
+- Immediate tasks go on the stove (call stack).
+- Promise-based microtasks are like pre-made side dishes—fast and ready to serve.
+- Macrotasks are dishes that need to bake in the oven—delayed but still important.
+
+
+
+
+
+
+
+### **Execution Order**
+
+
+
+
+
+1. Run all synchronous code (call stack).
+2. Process microtasks.
+3. Process a macrotask.
+4. Repeat (loop).
+
+
+
+
+
+------
+
+
+
+
+
+## **3. Example: Exploring Task Order**
+
+
+
+
+
+Consider the following code:
+
+```
+console.log("Start");
+
+setTimeout(() => {
+    console.log("Timer done");
+}, 0);
+
+Promise.resolve().then(() => {
+    console.log("Promise done");
+});
+
+console.log("End");
+```
+
+
+
+### **Output:**
+
+
+
+```
+Start
+End
+Promise done
+Timer done
+```
+
+
+
+### **Explanation**
+
+
+
+
+
+- Start and End are synchronous and run first.
+- The Promise.then() is a microtask and is processed after the call stack clears.
+- setTimeout is a macrotask and is processed after all microtasks.
+
+
+
+
+
+------
+
+
+
+
+
+## **4. Microtasks vs. Macrotasks**
+
+
+
+| **Task Type** | **Examples**                   | **Priority** | **Processed After** |
+| ------------- | ------------------------------ | ------------ | ------------------- |
+| Microtasks    | Promise.then, MutationObserver | High         | Synchronous code    |
+| Macrotasks    | setTimeout, UI events          | Lower        | Microtasks          |
+
+
+
+### **Rule of Thumb**
+
+
+
+
+
+> Microtasks always run before macrotasks, even if they are registered after.
+
+
+
+------
+
+
+
+
+
+## **5. Visualization: How the Event Loop Works**
+
+
+
+```
++-------------------+
+|     Call Stack    | <- Executes sync code
++-------------------+
+        ↓
++-------------------+
+|  Microtask Queue  | <- Executes next (Promises, etc.)
++-------------------+
+        ↓
++-------------------+
+|  Macrotask Queue  | <- Executes last (Timers, Events)
++-------------------+
+```
+
+The event loop checks if the call stack is empty. If yes, it runs all microtasks, then one macrotask, and loops again.
+
+
+
+------
+
+
+
+
+
+## **6. Practical UI Example (HTML + JS)**
+
+
+
+
+
+Create a simple button that loads data asynchronously and updates the DOM.
+
+
+
+
+
+### **HTML**
+
+
+
+```
+<button id="loadButton">Load Data</button>
+<div id="output"></div>
+```
+
+
+
+### **JavaScript**
+
+
+
+```
+document.getElementById("loadButton").addEventListener("click", () => {
+    const output = document.getElementById("output");
+    console.log("Clicked");
+    output.innerHTML = "Loading..."; // Synchronous
+
+    // Microtask: Promise
+    Promise.resolve().then(() => {
+        console.log("Promise resolved");
+        output.innerHTML += "<br>✅ Promise data loaded";
+    });
+
+    // Macrotask: setTimeout
+    setTimeout(() => {
+        console.log("Timeout finished");
+        output.innerHTML += "<br>
+```
+
+
+
+---
+
+# **Chapter: Babel and the Evolution of JavaScript**
+
+
+
+
+
+
+
+## **Introduction**
+
+
+
+
+
+Modern JavaScript is powerful, expressive, and continuously evolving. But with new syntax and features come compatibility challenges across browsers—especially older ones. Enter **Babel**, a tool that transpiles modern JavaScript into backwards-compatible code.
+
+
+
+This chapter will guide you through the purpose, history, and use of Babel, how it fits into the JavaScript toolchain, and how you can configure it for your projects.
+
+
+
+------
+
+
+
+
+
+## **Learning Objectives**
+
+
+
+
+
+By the end of this chapter, you should be able to:
+
+
+
+- Explain the origins and purpose of Babel
+- Understand the difference between transpiling and compiling
+- Use Babel to transpile modern JavaScript
+- Integrate Babel with development tools like Webpack or Vite
+- Configure Babel presets and plugins
+
+
+
+
+
+------
+
+
+
+
+
+## **1. The Need for Babel**
+
+
+
+
+
+JavaScript started in 1995 as a lightweight scripting language for browsers. For years, most browsers implemented ECMAScript 3 (ES3). Significant updates came in ES5 (2009), and even more in **ES6 (2015)**, also called ECMAScript 2015.
+
+
+
+
+
+### **ES6 Introduced Features Like:**
+
+
+
+
+
+- let and const
+- Arrow functions
+- Classes
+- Template literals
+- Destructuring
+- Modules (import/export)
+- Promises
+- Spread/rest operators
+
+
+
+
+
+
+
+### **The Problem**
+
+
+
+
+
+Many browsers—especially older ones—do not support these features. Waiting for browser support can slow development.
+
+
+
+------
+
+
+
+
+
+## **2. What is Babel?**
+
+
+
+
+
+**Babel** is a JavaScript *transpiler*, originally named 6to5, that converts modern JS (ES6+) into ES5. It’s named after the biblical Tower of Babel—because it helps unify “languages.”
+
+
+
+Babel ensures modern JavaScript runs in older browsers by transforming unsupported syntax into equivalent code.
+
+
+
+
+
+### **Example: Arrow Function**
+
+
+
+
+
+**Modern JS:**
+
+```
+const f = () => console.log("Hello");
+```
+
+**Babel Output:**
+
+```
+var f = function() {
+  return console.log("Hello");
+};
+```
+
+
+
+------
+
+
+
+
+
+## **3. Transpiling vs. Compiling**
+
+
+
+| **Term**    | **Meaning**                                                  |
+| ----------- | ------------------------------------------------------------ |
+| Transpiling | Converting code from one version to another (e.g., ES6 to ES5) |
+| Compiling   | Converting code from one language to another (e.g., C++ to machine code) |
+
+Babel is a **transpiler**, not a compiler.
+
+
+
+------
+
+
+
+
+
+## **4. Babel Playground**
+
+
+
+
+
+Visit [babeljs.io/repl](https://babeljs.io/repl) to try Babel live.
+
+
+
+- Write ES6+ code on the left
+- See ES5 output on the right
+
+
+
+
+
+
+
+### **Try:**
+
+
+
+```
+class Greeting {
+  name = "Trevor";
+  render() {
+    return `<h1>Hello ${this.name}</h1>`;
+  }
+}
+```
+
+This will be transformed into ES5-compatible syntax using Babel plugins and presets.
+
+
+
+------
+
+
+
+
+
+## **5. Babel in the Toolchain**
+
+
+
+
+
+Babel is often used *behind the scenes* in tools like:
+
+
+
+- Webpack
+- Vite
+- Create React App
+- Next.js
+- Vue CLI
+
+
+
+
+
+
+
+### **Typical Workflow**
+
+
+
+
+
+1. Write modern JavaScript or JSX
+2. Babel transpiles it to ES5
+3. Webpack bundles the result
+
+
+
+
+
+------
+
+
+
+
+
+## **6. Babel Presets and Plugins**
+
+
+
+
+
+
+
+### **Presets**
+
+
+
+
+
+Presets are collections of plugins. Common presets:
+
+
+
+- @babel/preset-env – for general JavaScript
+- @babel/preset-react – for JSX
+- @babel/preset-typescript – strips TypeScript types
+
+
+
+
+
+
+
+### **Plugins**
+
+
+
+
+
+Plugins support specific features:
+
+
+
+- @babel/plugin-proposal-class-properties
+- @babel/plugin-proposal-optional-chaining
+- @babel/plugin-proposal-nullish-coalescing-operator
+
+
+
+
+
+
+
+### **Example** 
+
+### **.babelrc**
+
+
+
+```
+{
+  "presets": ["@babel/preset-env", "@babel/preset-react"],
+  "plugins": [
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-optional-chaining",
+    "@babel/plugin-proposal-nullish-coalescing-operator"
+  ]
+}
+```
+
+
+
+------
+
+
+
+
+
+## **7. Polyfills vs Transpiling**
+
+
+
+
+
+- **Babel transpiles syntax** (e.g., arrow functions)
+- **Polyfills** add *functionality* that doesn’t exist (e.g., Promise, fetch)
+
+
+
+
+
+
+
+### **Polyfill Examples**
+
+
+
+
+
+- core-js
+- regenerator-runtime
+
+
+
+
+
+Use polyfills to support runtime features missing in older browsers.
+
+
+
+------
+
+
+
+
+
+## **8. Manual Babel Setup (Optional)**
+
+
+
+```
+npm install --save-dev @babel/core @babel/cli @babel/preset-env @babel/preset-react
+```
+
+Then create a .babelrc:
+
+```
+{
+  "presets": ["@babel/preset-env", "@babel/preset-react"]
+}
+```
+
+Run Babel:
+
+```
+npx babel src --out-dir dist
+```
+
+
+
+------
+
+
+
+
+
+## **Summary**
+
+
+
+
+
+- **Babel** is a transpiler that converts modern JavaScript into compatible versions.
+- It allows developers to use the latest language features without sacrificing browser support.
+- Babel integrates seamlessly with build tools and frameworks.
+- Babel does *not* polyfill—use libraries like core-js for that.
+- Most modern web projects already use Babel under the hood.
+
+
+
+
+
+------
+
+
+
+
+
+## **Practice Questions**
+
+
+
+
+
+1. What does Babel do?
+2. What is the difference between transpiling and compiling?
+3. How does Babel help React development?
+4. What’s the role of .babelrc?
+5. How do polyfills differ from Babel transpilation?
+
+
+
+
+
+------
+
+
+
+
+
+## **Answers**
+
+
+
+
+
+1. Babel converts modern JavaScript into ES5-compatible code.
+2. Transpiling is from one version to another; compiling is from one language to another.
+3. Babel transpiles JSX and modern syntax so React code works in all browsers.
+4. .babelrc defines presets and plugins used by Babel.
+5. Polyfills add missing functionality; transpilation rewrites syntax.
+
+
+
+
+
+------
+
+
+
+# **Chapter: Web Security Concepts**
+
+
+
+
+
+
+
+## **Summary**
+
+
+
+
+
+This chapter introduces three foundational web security concepts—Cross-Site Scripting (XSS), Cross-Site Request Forgery (CSRF), and Cross-Origin Resource Sharing (CORS). You’ll learn how attackers exploit vulnerabilities in web applications and how to prevent these attacks through proper input sanitization, secure coding practices, and HTTP header configurations. Live examples demonstrate real-world attacks and defenses.
+
+
+
+------
+
+
+
+
+
+## **Opening Prayer**
+
+
+
+
+
+> “In the name of the Father, and of the Son, and of the Holy Spirit. Amen. Heavenly Father, thank you for this day. Send down your Holy Spirit to guide our hearts, minds, and words. Prepare us to receive the truth. Open our ears to hear. Open our eyes to see. Open our mouths to speak. And open our minds to understand the truth and beauty of your perfect design. Amen.”
+
+
+
+------
+
+
+
+
+
+## **1. Introduction to Web Security Vulnerabilities**
+
+
+
+
+
+Web security is a broad topic that spans many disciplines. In this chapter, we’ll focus on three specific and commonly exploited areas:
+
+
+
+- **XSS (Cross-Site Scripting)**
+- **CSRF (Cross-Site Request Forgery)**
+- **CORS (Cross-Origin Resource Sharing)**
+
+
+
+
+
+Each of these represents a different threat vector and requires unique mitigation strategies.
+
+
+
+------
+
+
+
+
+
+## **2. Cross-Site Scripting (XSS)**
+
+
+
+
+
+
+
+### **What is XSS?**
+
+
+
+
+
+XSS occurs when an attacker injects malicious scripts—typically JavaScript—into web content that is then served to other users. If the web app doesn’t properly sanitize or encode user input, attackers can execute code in a victim’s browser session.
+
+
+
+
+
+### **Types of XSS:**
+
+
+
+
+
+- **Stored XSS:** The malicious script is saved (e.g., in a database) and served to other users.
+- **Reflected XSS:** The script is reflected from the URL and executed immediately when the user clicks a malicious link.
+- **DOM-based XSS:** JavaScript manipulates the DOM (e.g., using innerHTML) to introduce a script dynamically.
+
+
+
+
+
+
+
+### **Example: Reflected XSS**
+
+
+
+
+
+If a site reflects input without sanitization:
+
+```
+https://example.com/search?q=<script>alert('hacked')</script>
+```
+
+This will execute alert('hacked') in the user’s browser.
+
+
+
+A safer alternative uses textContent instead of innerHTML to avoid executing embedded scripts.
+
+```
+const params = new URLSearchParams(location.search);
+const q = params.get("q");
+document.getElementById("output").textContent = `Results for ${q}`;
+```
+
+
+
+### **Mitigation Strategies**
+
+
+
+
+
+- Avoid innerHTML—use textContent or DOM-safe methods.
+- Implement a Content Security Policy (CSP).
+- Sanitize user input and escape output.
+
+
+
+
+
+------
+
+
+
+
+
+## **3. Cross-Site Request Forgery (CSRF)**
+
+
+
+
+
+
+
+### **What is CSRF?**
+
+
+
+
+
+CSRF tricks a user into submitting a request to a trusted site where they are authenticated. The browser includes session cookies automatically, so the forged request looks legitimate.
+
+
+
+
+
+### **Example Scenario**
+
+
+
+
+
+You’re logged into:
+
+```
+https://bank.com (cookie: session_id=abc123)
+```
+
+Then you visit a malicious page that runs:
+
+```
+<img src="https://bank.com/transfer?to=attacker&amount=1000" style="display:none" />
+```
+
+Your browser sends the cookies automatically, transferring money to the attacker.
+
+
+
+
+
+### **Mitigation Strategies**
+
+
+
+
+
+- **CSRF Tokens:** Include a unique, unpredictable token with every form.
+- **SameSite Cookies:** Use the SameSite attribute to limit cross-site cookie use.
+- **Double Submit Cookies:** Send the CSRF token in both a cookie and request body.
+- **Check Referrer/Origin Headers:** Verify the request’s source.
+
+
+
+
+
+------
+
+
+
+
+
+## **4. Cross-Origin Resource Sharing (CORS)**
+
+
+
+
+
+
+
+### **What is CORS?**
+
+
+
+
+
+CORS is not a vulnerability—it’s a browser-enforced security mechanism. It restricts how content on one origin can interact with another origin.
+
+
+
+
+
+### **Origin Defined By:**
+
+
+
+
+
+- Protocol (http/https)
+- Domain (example.com)
+- Port (e.g., 8080)
+
+
+
+
+
+
+
+### **Example:**
+
+
+
+```
+https://api.example.com ≠ https://www.example.com
+```
+
+
+
+### **Key CORS Headers**
+
+
+
+
+
+- Access-Control-Allow-Origin
+- Access-Control-Allow-Methods
+- Access-Control-Allow-Headers
+- Access-Control-Allow-Credentials
+
+
+
+
+
+These headers tell the browser which domains and HTTP methods are permitted to access the resource.
+
+
+
+
+
+### **Common Pitfalls**
+
+
+
+
+
+- Overly permissive Access-Control-Allow-Origin headers
+- Misconfigured servers that expose sensitive APIs
+
+
+
+
+
+------
+
+
+
+
+
+## **5. Final Thoughts**
+
+
+
+
+
+Web security is a moving target. Minor oversights can lead to major vulnerabilities. You should:
+
+
+
+- **Validate Input**
+- **Escape Output**
+- **Configure Servers Correctly**
+- **Never treat security as an afterthought**
+
+
+
+
+
+This chapter only scratches the surface. Entire fields of study and certifications exist to explore web security in more depth.
+
+
+
+------
+
+
+
+
+
+## **Practice Questions**
+
+
+
+
+
+1. What’s the difference between reflected and stored XSS?
+2. How does using textContent help mitigate XSS?
+3. What role does a CSRF token play in preventing CSRF?
+4. Why do modern browsers restrict cross-origin requests?
+5. Name one HTTP header involved in CORS and explain its function.
+
+
+
+
+
+------
+
+
+
+> “Security is not a feature—it’s a discipline. Build it in from the start.”
